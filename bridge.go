@@ -137,7 +137,7 @@ func NewBridge(c *Config) (*Bridge, error) {
 		b.blacklist[v] = struct{}{}
 	}
 
-	// Use default credential provider, which I belive supports the standard
+	// Use default credential provider, which I believe supports the standard
 	// AWS_* environment variables, and the shared credential file under ~/.aws
 	sess, err := session.NewSession(&aws.Config{HTTPClient: client})
 	if err != nil {
@@ -272,7 +272,7 @@ func getName(m model.Metric) string {
 
 // getDimensions returns up to 10 dimensions for the provided metric - one for each label (except the __name__ label)
 //
-// If a metric has more than 10 labels, it attempts to behave determinically by sorting the labels lexicographically,
+// If a metric has more than 10 labels, it attempts to behave deterministically by sorting the labels lexicographically,
 // and returning the first 10 labels as dimensions
 func getDimensions(m model.Metric) []*cloudwatch.Dimension {
 	if len(m) == 0 {
