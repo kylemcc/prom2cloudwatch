@@ -54,7 +54,12 @@ type Config struct {
 	// Only publish whitelisted metrics
 	WhitelistOnly bool
 
+	// List of metrics that should be published, causing all others to be ignored.
+	// Config.WhitelistOnly must be set to true for this to take effect.
 	Whitelist []string
+
+	// List of metrics that should never be published. This setting overrides entries in Config.Whitelist
+	Blacklist []string
 }
 
 // Bridge pushes metrics to AWS Cloudwatch
@@ -67,6 +72,7 @@ type Bridge struct {
 
 	useWhitelist bool
 	whitelist    map[string]struct{}
+	blacklist    map[string]struct{}
 
 	logger Logger
 	g      prometheus.Gatherer
@@ -124,6 +130,11 @@ func NewBridge(c *Config) (*Bridge, error) {
 	b.whitelist = make(map[string]struct{}, len(c.Whitelist))
 	for _, v := range c.Whitelist {
 		b.whitelist[v] = struct{}{}
+	}
+
+	b.blacklist = make(map[string]struct{}, len(c.Blacklist))
+	for _, v := range c.Blacklist {
+		b.blacklist[v] = struct{}{}
 	}
 
 	// Use default credential provider, which I belive supports the standard
@@ -214,12 +225,20 @@ func (b *Bridge) flush(data []*cloudwatch.MetricDatum) error {
 	if len(data) > 0 {
 		// TODO: implement me
 		fmt.Printf("Publishing data: %+v\n", data)
+		//in := &cloudwatch.PutMetricDataInput{
+		//	MetricData: data,
+		//	Namespace:  b.cwNamespace,
+		//}
+		//_, err := b.cw.PutMetricData(in)
+		//return err
 	}
 	return nil
 }
 
 func (b *Bridge) isWhitelisted(name string) bool {
 	if !strings.HasPrefix(name, b.promNamespace) {
+		return false
+	} else if _, ok := b.blacklist[name]; ok {
 		return false
 	}
 
