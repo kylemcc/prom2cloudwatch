@@ -220,7 +220,7 @@ func (b *Bridge) flush(data []*cloudwatch.MetricDatum) error {
 	if len(data) > 0 {
 		in := &cloudwatch.PutMetricDataInput{
 			MetricData: data,
-			Namespace:  b.cwNamespace,
+			Namespace:  &b.cwNamespace,
 		}
 		_, err := b.cw.PutMetricData(in)
 		return err
