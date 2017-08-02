@@ -87,15 +87,13 @@ func NewBridge(c *Config) (*Bridge, error) {
 
 	if c.PrometheusNamespace == "" {
 		return nil, errors.New("PrometheusNamespace must not be empty")
-	} else {
-		b.promNamespace = c.PrometheusNamespace
 	}
+	b.promNamespace = c.PrometheusNamespace
 
 	if c.CloudWatchNamespace == "" {
 		return nil, errors.New("CloudWatchNamespace must not be empty")
-	} else {
-		b.cwNamespace = c.CloudWatchNamespace
 	}
+	b.cwNamespace = c.CloudWatchNamespace
 
 	if c.Interval > 0 {
 		b.interval = c.Interval
@@ -148,10 +146,10 @@ func NewBridge(c *Config) (*Bridge, error) {
 	return b, nil
 }
 
-// From https://github.com/prometheus/client_golang/blob/master/prometheus/graphite/bridge.go
 // Logger is the minimal interface Bridge needs for logging. Note that
 // log.Logger from the standard library implements this interface, and it is
 // easy to implement by custom loggers, if they don't do so already anyway.
+// Taken from https://github.com/prometheus/client_golang/blob/master/prometheus/graphite/bridge.go
 type Logger interface {
 	Println(v ...interface{})
 }
