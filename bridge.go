@@ -3,7 +3,6 @@ package prom2cloudwatch
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"sort"
 	"strings"
@@ -203,8 +202,6 @@ func (b *Bridge) publishMetrics(mfs []*dto.MetricFamily) error {
 		name := getName(s.Metric)
 		if b.isWhitelisted(name) {
 			data = appendDatum(data, name, s)
-			//} else {
-			//fmt.Printf("discarding metric: name:[%q] [%+v]\n", name, s)
 		}
 
 		// punt on the 40KB size limitation. Will see how this works out in practice
@@ -221,14 +218,12 @@ func (b *Bridge) publishMetrics(mfs []*dto.MetricFamily) error {
 
 func (b *Bridge) flush(data []*cloudwatch.MetricDatum) error {
 	if len(data) > 0 {
-		// TODO: implement me
-		fmt.Printf("Publishing data: %+v\n", data)
-		//in := &cloudwatch.PutMetricDataInput{
-		//	MetricData: data,
-		//	Namespace:  b.cwNamespace,
-		//}
-		//_, err := b.cw.PutMetricData(in)
-		//return err
+		in := &cloudwatch.PutMetricDataInput{
+			MetricData: data,
+			Namespace:  b.cwNamespace,
+		}
+		_, err := b.cw.PutMetricData(in)
+		return err
 	}
 	return nil
 }
