@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: [Dockerhub] Docker Login
+    - name: '[Dockerhub] Docker Login'
       uses: actions/docker/login@master
       env:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    - name: [Github] Docker Login
+    - name: '[Github] Docker Login'
       uses: actions/docker/login@master
       env:
         DOCKER_PASSWORD: ${{ secrets.GH_DOCKER_PASSWORD }}
@@ -23,19 +23,19 @@ jobs:
       uses: actions/docker/cli@master
       with:
         args: build -t prom2cloudwatch .
-    - name: [Dockerhub] tag image
+    - name: '[Dockerhub] tag image'
       uses: actions/docker/tag@master
       with:
         args: --env prom2cloudwatch kylemcc/prom2cloudwatch
-    - name: [Github] tag image
+    - name: '[Github] tag image'
       uses: actions/docker/tag@master
       with:
         args: --env prom2cloudwatch docker.pkg.github.com/kylemcc/prom2cloudwatch/prom2cloudwatch
-    - name: [Dockerhub] Push Image
+    - name: '[Dockerhub] Push Image'
       uses: actions/docker/cli@master
       with:
         args: push kylemcc/prom2cloudwatch
-    - name: [Github] Push Image
+    - name: '[Github] Push Image'
       uses: actions/docker/cli@master
       with:
         args: push docker.pkg.github.com/kylemcc/prom2cloudwatch/prom2cloudwatch
