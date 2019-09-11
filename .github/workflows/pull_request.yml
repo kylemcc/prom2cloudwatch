@@ -22,7 +22,3 @@ jobs:
           fi
     - name: Run Tests
       run: go test ./...
-    - name: Build Image
-      uses: actions/docker/cli@76ff57a
-      with:
-        args: build -t prom2cloudwatch .
